@@ -27,18 +27,27 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(800,400);
+  createCanvas(windowWidth, windowHeight);
   edges = createEdgeSprites();
   pkbob = createSprite(400, 222, 50, 50);
   pkbob.addAnimation("pkbob", pkbobAnim);
   pkbob.addAnimation("pkbob2", pkbobstop);
   pkbob.scale = 0.18;
   pkbob.depth = 2;
-  bgSprite1 = createSprite(0, 125);
-  bgSprite1.addAnimation("bgSpr1", bgImage);
+  //windowWidth / 2
+  //windowHeight - 400
+  //windowWidth
+  //windowHeight
+  //bgSprite1 = createSprite(0, windowHeight / 2, windowWidth, windowHeight);
+  bgSprite1 = createSprite(0, windowHeight / 2, windowWidth, windowHeight);
+  bgSprite1.addImage("bgSpr1", bgImage);
+  //bgImage.resize(windowWidth, windowHeight);
   //var bg = createSprite(0, 0, 1600, 800);
   //bg.shapeColor = "rgba(0, 0, 0, 0.5)";
   bgSprite1.depth = 1;
+  //bgImage.width = windowWidth * 2.5;
+  //bgImage.height = windowHeight;
+  bgSprite1.scale = 1.5;
   bgSprite1.x = bgSprite1.width / 2;
   bgSprite1.velocityX = backgroundVelocityX;
   
@@ -72,10 +81,10 @@ function setup() {
 }
 
 function draw() {
-  console.log(pkbob.y);
+  //console.log(pkbob.y);
   //console.log("Game State: " + gameState, "Player visibility: " + pkbob.visible, "Background visibility: " + bgSprite1.visible, "Obstacle visibility: " + obstacleSpr.visible, "Virus visibility: " + virus.visible);
   //console.log("Player velocity: x = " + pkbob.velocityX + ", y = " + pkbob.velocityY, "Background velocity: x = " + bgSprite1.velocityX + ", y = " + bgSprite1.velocityY, "Obstacle velocity: x = " + obstacleSpr.velocityX + ", y = " + obstacleSpr.velocityY, "Virus velocity: x = " + virus.velocityX + ", y = " + virus.velocityY);
-  console.log(score);
+  //console.log(score);
   //console.log(numberOfGamesPlayed);
   //console.log("Virus: " + virus.isTouching(pkbob), virus.x, virus.y);
   //fill("white");
@@ -99,7 +108,6 @@ function draw() {
   //text("Welcome to Mother Earth. As God has built us as citizens, we have a responsibility to promote sustainability, stewarship, and discipleship.", 0, 90);
   //text("Throughout this game, you will be tested on discipleship. It is a responsibility for all citizens to ensure health and safety and to avoid gatherings of such kind during this pandemic.", 0, 180);
   
-
   if (gameState === "serve") {
     serve();
   }
@@ -144,9 +152,10 @@ function keyPressed() {
   /*if (keyIsDown(RIGHT_ARROW)) {
     pkbob.x = pkbob.x + 5;
   }*/
-  if (keyIsDown(32) && pkbob.y >= 172) {
+  if ((touches.length > 0 || keyIsDown(32)) && pkbob.y >= (windowHeight - 200)) {
     //if (keyCode === 38) {
     pkbob.velocityY = -200;
+    touches = [];
     //playerProgress.play();
     //console.log(pkbob.y);
     //}
@@ -193,7 +202,7 @@ function spawnObstacles() {
 
         citizens.addImage(face2);
         citizens.x = Math.round(random(10, width-10));
-        citizens.y = Math.round(random(172, 222));
+        citizens.y = Math.round(random(windowHeight - 280, windowHeight - 225));
       } else {
         /*obstacleSpr.addImage(face1);
         obstacleSpr.x = Math.round(random(10, width-10));
@@ -201,7 +210,7 @@ function spawnObstacles() {
 
         citizens.addImage(face1);
         citizens.x = Math.round(random(10, width-10));
-        citizens.y = Math.round(random(172, 222));
+        citizens.y = Math.round(random(windowHeight - 280, windowHeight - 225));
       }
     }
     //obstaclekSpr.velocityX = -6;
@@ -286,7 +295,7 @@ function serve() {
   //fill("brown");
   text("Press the key 'space' to continue.", 0, 340);
   pop();  
-  pkbob.y = 337;
+  pkbob.y = windowHeight - 200;
   if (keyIsDown(32)) {
     gameState = "play"; 
   }
@@ -296,6 +305,8 @@ function play() {
   //gameLaunch.play();
   //gameLaunch.stop();
   spawnObstacles();
+  //image(bgImage, 0, windowHeight / 2, windowWidth, windowHeight);
+  //background(bgImage);
   virus.setVelocity(virusVelocityX, random(-30, 30));
   virus.bounceOff(edges);
   bgSprite1.visible = true;
@@ -325,8 +336,8 @@ function play() {
   
 
   pkbob.velocityY = 5;
-  if (pkbob.y > 222) {
-    pkbob.y = 222;
+  if (pkbob.y > (windowHeight - 200)) {
+    pkbob.y = windowHeight - 200;
   }
   //pkbob.collide(bgSprite1);
   //spawnObstacles();
@@ -377,7 +388,7 @@ function play() {
     //console.log(true);
     backgroundVelocityX -= 0.5;
     virusVelocityX -= 0.8;
-    //background.velocityX = backgroundVelocityX - 6;
+    background.velocityX = backgroundVelocityX - 6;
     obstacleFrameCount -= 10;
     playerProgress.play();
     /*if (count % obstacleFrameCount === 0) {
